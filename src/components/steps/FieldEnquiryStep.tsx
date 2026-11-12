@@ -4,6 +4,9 @@ import { useState, useTransition } from 'react';
 import { hi } from '@/lib/i18n/hi';
 import type { FieldEnquiryData, PossessionStatus } from '@/lib/workflow/types';
 import { saveStepData } from '@/app/(app)/applications/[id]/actions';
+import { requestSuggestion } from '@/app/(app)/applications/[id]/ai-actions';
+import { AiSuggestionPanel } from '@/components/AiSuggestionPanel';
+import type { FieldReportOutput } from '@/lib/ai/schemas';
 
 interface Props {
   applicationId: string;
@@ -27,18 +30,24 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
   const [roughNotes, setRoughNotes] = useState(initialData?.roughNotes ?? '');
   const [reportText, setReportText] = useState(initialData?.reportText ?? '');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [activeSuggestionId, setActiveSuggestionId] = useState<string | null>(null);
 
   const handleSave = () => {
     startTransition(async () => {
       setStatusMessage(null);
-      const res = await saveStepData(applicationId, 'FIELD_ENQUIRY', {
-        visitDate,
-        possessionStatus,
-        coSharersPresent,
-        boundaryDispute,
-        roughNotes,
-        reportText,
-      });
+      const res = await saveStepData(
+        applicationId,
+        'FIELD_ENQUIRY',
+        {
+          visitDate,
+          possessionStatus,
+          coSharersPresent,
+          boundaryDispute,
+          roughNotes,
+          reportText,
+        },
+        activeSuggestionId || undefined
+      );
 
       if (res.ok) {
         setStatusMessage(hi.caseDetail.saveSuccess);
@@ -49,7 +58,7 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
         <label
           htmlFor="visitDate"
@@ -63,7 +72,7 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
           disabled={!isEditable}
           value={visitDate}
           onChange={(e) => setVisitDate(e.target.value)}
-          className="w-full min-h-[44px] px-3 py-2 text-base border border-zinc-300 rounded-lg focus:outline-2 focus:outline-blue-600 disabled:bg-zinc-100"
+          className="w-full sm:w-64 min-h-[44px] px-3 border border-zinc-300 rounded-lg text-base text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:bg-zinc-100 disabled:text-zinc-500"
         />
       </div>
 
@@ -79,7 +88,7 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
           disabled={!isEditable}
           value={possessionStatus}
           onChange={(e) => setPossessionStatus(e.target.value as PossessionStatus)}
-          className="w-full min-h-[44px] px-3 py-2 text-base border border-zinc-300 rounded-lg focus:outline-2 focus:outline-blue-600 disabled:bg-zinc-100 bg-white"
+          className="w-full sm:w-80 min-h-[44px] px-3 border border-zinc-300 rounded-lg text-base text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:bg-zinc-100 disabled:text-zinc-500"
         >
           <option value="BUYER">
             {hi.stepForms.fieldEnquiry.possessionOptions.BUYER}
@@ -96,8 +105,8 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-        <label className="flex items-center gap-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg min-h-[44px] cursor-pointer">
+      <div className="space-y-3 pt-1">
+        <label className="flex items-center gap-3 min-h-[44px] cursor-pointer">
           <input
             type="checkbox"
             disabled={!isEditable}
@@ -105,20 +114,20 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
             onChange={(e) => setCoSharersPresent(e.target.checked)}
             className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500"
           />
-          <span className="text-sm sm:text-base font-medium text-zinc-800">
+          <span className="text-base text-zinc-800 font-medium">
             {hi.stepForms.fieldEnquiry.coSharersPresent}
           </span>
         </label>
 
-        <label className="flex items-center gap-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg min-h-[44px] cursor-pointer">
+        <label className="flex items-center gap-3 min-h-[44px] cursor-pointer">
           <input
             type="checkbox"
             disabled={!isEditable}
             checked={boundaryDispute}
             onChange={(e) => setBoundaryDispute(e.target.checked)}
-            className="w-5 h-5 rounded text-red-600 focus:ring-red-500"
+            className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500"
           />
-          <span className="text-sm sm:text-base font-medium text-zinc-800">
+          <span className="text-base text-zinc-800 font-medium">
             {hi.stepForms.fieldEnquiry.boundaryDispute}
           </span>
         </label>
@@ -133,13 +142,58 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
         </label>
         <textarea
           id="roughNotes"
-          disabled={!isEditable}
           rows={3}
+          disabled={!isEditable}
           value={roughNotes}
           onChange={(e) => setRoughNotes(e.target.value)}
-          className="w-full p-3 text-base border border-zinc-300 rounded-lg focus:outline-2 focus:outline-blue-600 disabled:bg-zinc-100"
+          placeholder="स्थल पर प्राप्त मौखिक साक्ष्य, उपस्थित लोगों के नाम एवं कच्ची टिप्पणी..."
+          className="w-full p-3 border border-zinc-300 rounded-lg text-base text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:bg-zinc-100 disabled:text-zinc-500"
         />
       </div>
+
+      {/* AI Suggestion Panel */}
+      <AiSuggestionPanel
+        buttonLabel={hi.ai.fieldReportButton}
+        isEditable={isEditable}
+        onRequest={() =>
+          requestSuggestion(applicationId, 'FIELD_ENQUIRY', 'FIELD_REPORT', {
+            roughNotes,
+          })
+        }
+        onApply={(rawOutput, sugId) => {
+          const output = rawOutput as FieldReportOutput;
+          setActiveSuggestionId(sugId);
+          if (output.reportText) {
+            setReportText(output.reportText);
+          }
+          if (output.possessionStatus && output.possessionStatus !== 'UNKNOWN') {
+            setPossessionStatus(output.possessionStatus as PossessionStatus);
+          }
+          if (output.boundaryDispute !== null) {
+            setBoundaryDispute(output.boundaryDispute);
+          }
+        }}
+        onDiscard={() => setActiveSuggestionId(null)}
+        renderContent={(rawOutput) => {
+          const data = rawOutput as FieldReportOutput;
+          return (
+            <div className="space-y-3">
+              <h4 className="text-sm font-bold text-indigo-950">
+                {hi.ai.suggestedReport}:
+              </h4>
+              <div className="p-3 bg-white border border-indigo-200 rounded text-sm text-zinc-800 leading-relaxed font-sans whitespace-pre-wrap">
+                {data.reportText}
+              </div>
+              {data.coSharersMentioned && data.coSharersMentioned.length > 0 && (
+                <div className="text-xs text-indigo-900">
+                  <span className="font-bold">उल्लिखित सह-हिस्सेदार: </span>
+                  <span>{data.coSharersMentioned.join(', ')}</span>
+                </div>
+              )}
+            </div>
+          );
+        }}
+      />
 
       <div>
         <label
@@ -150,29 +204,33 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
         </label>
         <textarea
           id="reportText"
-          disabled={!isEditable}
           rows={5}
+          disabled={!isEditable}
           value={reportText}
           onChange={(e) => setReportText(e.target.value)}
-          className="w-full p-3 text-base border border-zinc-300 rounded-lg focus:outline-2 focus:outline-blue-600 disabled:bg-zinc-100"
+          className="w-full p-3 border border-zinc-300 rounded-lg text-base text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:bg-zinc-100 disabled:text-zinc-500 font-sans leading-relaxed"
         />
       </div>
 
+      {statusMessage && (
+        <div
+          role="status"
+          className="p-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm font-medium"
+        >
+          {statusMessage}
+        </div>
+      )}
+
       {isEditable && (
-        <div className="flex items-center gap-3 pt-2">
+        <div className="pt-2">
           <button
             type="button"
             onClick={handleSave}
             disabled={isPending}
-            className="min-h-[44px] px-5 py-2.5 bg-blue-700 hover:bg-blue-800 active:bg-blue-900 text-white font-semibold text-base rounded-lg transition-colors focus:outline-2 focus:outline-blue-800 disabled:opacity-50"
+            className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-xs focus:ring-2 focus:ring-blue-500 focus:outline-hidden disabled:opacity-50"
           >
-            {isPending ? hi.common.loading : hi.common.save}
+            {isPending ? hi.caseDetail.saving : hi.caseDetail.saveButton}
           </button>
-          {statusMessage && (
-            <span className="text-sm font-medium text-emerald-700">
-              {statusMessage}
-            </span>
-          )}
         </div>
       )}
     </div>

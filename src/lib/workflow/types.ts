@@ -17,6 +17,8 @@ export type Status =
 
 export type Decision = 'FORWARD' | 'RETURN' | 'APPROVE' | 'REJECT';
 
+export type AiOutcome = 'PENDING' | 'ACCEPTED' | 'EDITED' | 'DISCARDED';
+
 export const STEP_ORDER: readonly Step[] = [
   'SCRUTINY',
   'FIELD_ENQUIRY',

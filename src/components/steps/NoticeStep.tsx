@@ -4,6 +4,9 @@ import { useState, useTransition } from 'react';
 import { hi } from '@/lib/i18n/hi';
 import type { NoticeData, NoticeParty, Objection } from '@/lib/workflow/types';
 import { saveStepData } from '@/app/(app)/applications/[id]/actions';
+import { requestSuggestion } from '@/app/(app)/applications/[id]/ai-actions';
+import { AiSuggestionPanel } from '@/components/AiSuggestionPanel';
+import type { NoticePartiesOutput } from '@/lib/ai/schemas';
 
 interface Props {
   applicationId: string;
@@ -42,8 +45,9 @@ export function NoticeStep({
     initialData?.objections ?? []
   );
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [activeSuggestionId, setActiveSuggestionId] = useState<string | null>(null);
 
-  // Form inputs for adding a party
+  // Form inputs for adding a party manually
   const [newPartyName, setNewPartyName] = useState('');
   const [newPartyRelation, setNewPartyRelation] = useState('');
 
@@ -52,14 +56,20 @@ export function NoticeStep({
   const [newObjectionText, setNewObjectionText] = useState('');
   const [newReceivedOn, setNewReceivedOn] = useState('');
 
-  const handleAddParty = () => {
-    if (!newPartyName.trim() || !newPartyRelation.trim()) return;
-    setSpecificParties([
-      ...specificParties,
-      { name: newPartyName.trim(), relation: newPartyRelation.trim() },
+  const handleAddParty = (nameToAdd?: string, relToAdd?: string) => {
+    const finalName = (nameToAdd || newPartyName).trim();
+    const finalRel = (relToAdd || newPartyRelation).trim();
+    if (!finalName || !finalRel) return;
+
+    setSpecificParties((prev) => [
+      ...prev,
+      { name: finalName, relation: finalRel },
     ]);
-    setNewPartyName('');
-    setNewPartyRelation('');
+
+    if (!nameToAdd) {
+      setNewPartyName('');
+      setNewPartyRelation('');
+    }
   };
 
   const handleRemoveParty = (index: number) => {
@@ -88,12 +98,17 @@ export function NoticeStep({
   const handleSave = () => {
     startTransition(async () => {
       setStatusMessage(null);
-      const res = await saveStepData(applicationId, 'NOTICE_OBJECTION', {
-        generalNoticeIssuedOn: generalNoticeIssuedOn || null,
-        objectionDeadline: objectionDeadline || null,
-        specificNoticeParties: specificParties,
-        objections,
-      });
+      const res = await saveStepData(
+        applicationId,
+        'NOTICE_OBJECTION',
+        {
+          generalNoticeIssuedOn: generalNoticeIssuedOn || null,
+          objectionDeadline: objectionDeadline || null,
+          specificNoticeParties: specificParties,
+          objections,
+        },
+        activeSuggestionId || undefined
+      );
 
       if (res.ok) {
         setStatusMessage(hi.caseDetail.saveSuccess);
@@ -153,6 +168,61 @@ export function NoticeStep({
           })}
         </div>
       </div>
+
+      {/* AI Suggestion Panel for identifying specific notice parties */}
+      <AiSuggestionPanel
+        buttonLabel={hi.ai.noticeButton}
+        isEditable={isEditable}
+        onRequest={() =>
+          requestSuggestion(applicationId, 'NOTICE_OBJECTION', 'NOTICE_PARTIES')
+        }
+        onApply={(rawOutput, sugId) => {
+          const data = rawOutput as NoticePartiesOutput;
+          setActiveSuggestionId(sugId);
+          if (data.parties && data.parties.length > 0) {
+            setSpecificParties((prev) => [
+              ...prev,
+              ...data.parties.map((p) => ({ name: p.name, relation: p.relation })),
+            ]);
+          }
+        }}
+        onDiscard={() => setActiveSuggestionId(null)}
+        renderContent={(rawOutput) => {
+          const data = rawOutput as NoticePartiesOutput;
+          return (
+            <div className="space-y-3">
+              <h4 className="text-sm font-bold text-indigo-950">
+                {hi.ai.suggestedParties}:
+              </h4>
+              <div className="space-y-2">
+                {data.parties.map((p, idx) => (
+                  <div
+                    key={idx}
+                    className="p-2.5 bg-white border border-indigo-100 rounded-lg flex flex-wrap items-center justify-between gap-2 text-xs"
+                  >
+                    <div>
+                      <span className="font-bold text-zinc-900 text-sm">
+                        {p.name}
+                      </span>
+                      <span className="text-indigo-900 ml-2">({p.relation})</span>
+                      <p className="text-zinc-600 mt-0.5">{p.reasonHi}</p>
+                    </div>
+                    {isEditable && (
+                      <button
+                        type="button"
+                        onClick={() => handleAddParty(p.name, p.relation)}
+                        className="min-h-[36px] px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded text-xs font-semibold"
+                      >
+                        + {hi.ai.addPartyButton}
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }}
+      />
 
       {/* Specific Notice Parties (Form-XII) */}
       <div className="space-y-3">
@@ -221,7 +291,7 @@ export function NoticeStep({
             </div>
             <button
               type="button"
-              onClick={handleAddParty}
+              onClick={() => handleAddParty()}
               className="min-h-[44px] px-4 bg-zinc-700 text-white rounded-lg text-sm font-semibold hover:bg-zinc-800"
             >
               + {hi.stepForms.notice.addParty}

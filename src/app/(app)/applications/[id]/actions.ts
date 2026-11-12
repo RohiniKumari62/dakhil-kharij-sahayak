@@ -77,7 +77,8 @@ export type SaveStepResult =
 export async function saveStepData(
   applicationId: string,
   step: Step,
-  data: Record<string, unknown>
+  data: Record<string, unknown>,
+  activeSuggestionId?: string
 ): Promise<SaveStepResult> {
   const supabase = await createClient();
   const {
@@ -146,6 +147,65 @@ export async function saveStepData(
 
   if (upsertError) {
     return { ok: false, error: upsertError.message };
+  }
+
+  // 5. If an active AI suggestion was applied, compare and track outcome
+  if (activeSuggestionId) {
+    const { data: suggestion } = await adminClient
+      .from('ai_suggestions')
+      .select('*')
+      .eq('id', activeSuggestionId)
+      .eq('application_id', applicationId)
+      .single();
+
+    if (suggestion && suggestion.outcome === 'PENDING') {
+      let isUnchanged = false;
+      const sugOutput = (suggestion.output as Record<string, unknown>) || {};
+
+      if (step === 'FIELD_ENQUIRY') {
+        const aiReport = ((sugOutput.reportText as string) || '').trim();
+        const savedReport = ((data.reportText as string) || '').trim();
+        isUnchanged = aiReport === savedReport;
+      } else if (step === 'FINAL_ORDER') {
+        const aiOrder = ((sugOutput.orderTextHi as string) || '').trim();
+        const savedOrder = ((data.orderText as string) || '').trim();
+        isUnchanged = aiOrder === savedOrder;
+      } else if (step === 'HEARING_RECOMMENDATION') {
+        const aiRec = ((sugOutput.draftRecommendationHi as string) || '').trim();
+        const savedRec = ((data.recommendationText as string) || '').trim();
+        isUnchanged = aiRec === savedRec;
+      } else if (step === 'SCRUTINY') {
+        const aiSummary = ((sugOutput.summaryHi as string) || '').trim();
+        const savedNotes = ((data.mismatchNotes as string) || '').trim();
+        isUnchanged = aiSummary === savedNotes;
+      }
+
+      const outcome = isUnchanged ? 'ACCEPTED' : 'EDITED';
+
+      await adminClient
+        .from('ai_suggestions')
+        .update({
+          outcome,
+          final_text: JSON.stringify(data),
+          resolved_at: new Date().toISOString(),
+        })
+        .eq('id', activeSuggestionId);
+
+      const auditNote =
+        outcome === 'ACCEPTED'
+          ? 'AI सुझाव पूर्णतः स्वीकार किया गया'
+          : 'AI सुझाव में संशोधन कर उपयोग किया गया';
+
+      await adminClient.from('audit_events').insert({
+        application_id: applicationId,
+        actor_id: user.id,
+        actor_role: userRole,
+        event_type: 'AI_SUGGESTION_USED',
+        from_step: step,
+        to_step: step,
+        note: auditNote,
+      });
+    }
   }
 
   revalidatePath(`/applications/${applicationId}`);
