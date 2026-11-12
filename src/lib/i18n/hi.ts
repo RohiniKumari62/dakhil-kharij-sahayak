@@ -28,6 +28,21 @@ export const hi = {
     anchalName: 'डेमो अंचल',
   },
 
+  notFound: {
+    title: 'पृष्ठ नहीं मिला',
+    heading: '404 - यह पृष्ठ उपलब्ध नहीं है',
+    description: 'आप जिस पृष्ठ या वाद संख्या को खोज रहे हैं, वह स्थानांतरित हो चुका है या मौजूद नहीं है।',
+    backHome: 'डैशबोर्ड पर जाएँ',
+  },
+
+  errorPage: {
+    title: 'त्रुटि उत्पन्न हुई',
+    heading: 'कुछ गलत हो गया',
+    description: 'अनुरोध संसाधित करते समय एक अप्रत्याशित समस्या आई है। कृपया पुनः प्रयास करें।',
+    retryButton: 'पुनः प्रयास करें',
+    backDashboard: 'डैशबोर्ड पर वापस जाएँ',
+  },
+
   roles: {
     halka_karamchari: 'हल्का कर्मचारी',
     revenue_officer: 'राजस्व अधिकारी',
@@ -91,6 +106,7 @@ export const hi = {
   },
 
   login: {
+    pageTitle: 'लॉगिन | दाखिल-खारिज सहायक',
     title: 'विभागीय लॉगिन',
     subtitle: 'बिहार राजस्व एवं भूमि सुधार विभाग',
     emailLabel: 'ईमेल आईडी',
@@ -99,9 +115,15 @@ export const hi = {
     loggingIn: 'प्रवेश हो रहा है...',
     demoBoxTitle: 'डेमो लॉगिन (परीक्षण हेतु)',
     demoPrompt: 'त्वरित प्रवेश के लिए किसी एक पद पर क्लिक करें:',
+    demoUsers: {
+      karamchari: 'राजेश कुमार',
+      ro: 'सुनीता देवी',
+      co: 'अनिल प्रसाद',
+    },
   },
 
   dashboard: {
+    pageTitle: 'कार्य सूची | दाखिल-खारिज सहायक',
     title: 'कार्य सूची',
     totalPending: 'कुल लंबित',
     myAction: 'मेरी कार्रवाई',
@@ -111,6 +133,7 @@ export const hi = {
     sectionOtherPending: 'अन्य लंबित मामले',
     sectionDisposed: 'निपटाए गए मामले',
     filterAllSteps: 'सभी चरण',
+    filterStepLabel: 'चरण अनुसार फ़िल्टर',
     emptyMyWork: 'वर्तमान में आपके स्तर पर कोई आवेदन लंबित नहीं है।',
     emptyOtherPending: 'अन्य कोई लंबित आवेदन नहीं है।',
     emptyDisposed: 'कोई निपटाया गया आवेदन नहीं है।',
@@ -119,6 +142,17 @@ export const hi = {
     mauza: 'मौजा',
     khataKhesra: 'खाता/खेसरा',
     openCase: 'विवरण खोलें',
+  },
+
+  timeline: {
+    eventCreated: 'आवेदन दर्ज',
+    eventAiUsed: 'AI सुझाव प्रयुक्त',
+    eventNoteSaved: 'टिप्पणी सहेजी गई',
+  },
+
+  audit: {
+    aiAcceptedNote: 'AI सुझाव पूर्णतः स्वीकार किया गया',
+    aiEditedNote: 'AI सुझाव में संशोधन कर उपयोग किया गया',
   },
 
   caseDetail: {
@@ -160,6 +194,7 @@ export const hi = {
     activeStepOwnerPrefix: 'यह चरण',
     activeStepOwnerSuffix: 'के पास है।',
     noteLabel: 'टिप्पणी',
+    decisionSectionTitle: 'कार्रवाई एवं निर्णय:',
   },
 
   stepForms: {
@@ -172,6 +207,10 @@ export const hi = {
       officerRemarks: 'जाँच अधिकारी का मंतव्य',
       deedTextHeading: 'पंजीकृत दस्तावेज का मूल विवरण',
       delayNotice: 'चेतावनी: दस्तावेज निबंधन एवं आवेदन के बीच 90 दिनों से अधिक का विलंब है।',
+      sellerLabel: 'विक्रेता:',
+      buyerLabel: 'क्रेता:',
+      khataKhesraLabel: 'खाता/खेसरा:',
+      areaLabel: 'रकबा:',
     },
     fieldEnquiry: {
       title: 'हल्का कर्मचारी स्थल निरीक्षण प्रतिवेदन',
@@ -186,7 +225,9 @@ export const hi = {
       coSharersPresent: 'क्या सह-हिस्सेदार मौके पर मौजूद थे?',
       boundaryDispute: 'क्या चौहद्दी को लेकर कोई सीमा विवाद है?',
       roughNotes: 'कर्मचारी की कच्ची टिप्पणी (फील्ड नोट्स)',
+      roughNotesPlaceholder: 'स्थल पर प्राप्त मौखिक साक्ष्य, उपस्थित लोगों के नाम एवं कच्ची टिप्पणी...',
       reportText: 'औपचारिक स्थल जांच प्रतिवेदन (विस्तृत रिपोर्ट)',
+      coSharersLabel: 'उल्लिखित सह-हिस्सेदार:',
     },
     notice: {
       title: 'आम एवं खास सूचना निर्गमन तथा आपत्ति',
@@ -235,15 +276,20 @@ export const hi = {
       hearingDate: 'सुनवाई की तिथि',
       summaryText: 'सुनवाई एवं साक्ष्यों का सारांश',
       recommendationText: 'स्पष्ट अनुशंसा (अंचलाधिकारी के आदेश हेतु)',
+      summaryDraftHeading: 'सारांश प्रारूप:',
+      recommendationDraftHeading: 'प्रस्तावित अनुशंसा (वैकल्पिक समापन सहित):',
     },
     finalOrder: {
       title: 'अंचलाधिकारी का अंतिम आदेश',
       orderText: 'अंतिम आदेश का विस्तृत आदेश पत्र',
       orderDraftNotice: 'यह आदेश ऑनलाइन दाखिल-खारिज अभिलेख में स्थायी रूप से दर्ज होगा।',
+      draftOrderHeading: 'प्रस्तावित अंतिम आदेश (ड्राफ्ट):',
+      missingFactsLabel: 'अभिलेख में अनुपलब्ध तथ्य:',
     },
   },
 
   ai: {
+    applied: 'प्रयुक्त',
     buttonGetSuggestion: 'AI से सुझाव लें',
     loadingText: 'AI विश्लेषण कर रहा है, कृपया प्रतीक्षा करें...',
     disclaimer: 'AI का सुझाव, केवल मसौदा। अंतिम निर्णय आपका है।',

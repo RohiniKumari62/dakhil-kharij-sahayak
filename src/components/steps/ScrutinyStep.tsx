@@ -118,27 +118,27 @@ export function ScrutinyStep({
               </h4>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                 <div className="p-2 bg-white rounded border border-indigo-100">
-                  <span className="text-zinc-500 block">विक्रेता:</span>
+                  <span className="text-zinc-500 block">{hi.stepForms.scrutiny.sellerLabel}</span>
                   <span className="font-semibold text-zinc-900">
                     {data.extracted?.sellerName}
                   </span>
                 </div>
                 <div className="p-2 bg-white rounded border border-indigo-100">
-                  <span className="text-zinc-500 block">क्रेता:</span>
+                  <span className="text-zinc-500 block">{hi.stepForms.scrutiny.buyerLabel}</span>
                   <span className="font-semibold text-zinc-900">
                     {data.extracted?.buyerName}
                   </span>
                 </div>
                 <div className="p-2 bg-white rounded border border-indigo-100">
-                  <span className="text-zinc-500 block">खाता/खेसरा:</span>
+                  <span className="text-zinc-500 block">{hi.stepForms.scrutiny.khataKhesraLabel}</span>
                   <span className="font-semibold text-zinc-900 font-mono">
                     {data.extracted?.khataNo} / {data.extracted?.khesraNo}
                   </span>
                 </div>
                 <div className="p-2 bg-white rounded border border-indigo-100">
-                  <span className="text-zinc-500 block">रकबा:</span>
+                  <span className="text-zinc-500 block">{hi.stepForms.scrutiny.areaLabel}</span>
                   <span className="font-semibold text-zinc-900 font-mono">
-                    {data.extracted?.areaDecimal} डिसमिल
+                    {data.extracted?.areaDecimal} {hi.common.decimalUnit}
                   </span>
                 </div>
               </div>

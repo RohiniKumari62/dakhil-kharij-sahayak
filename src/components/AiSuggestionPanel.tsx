@@ -129,7 +129,7 @@ export function AiSuggestionPanel({
               onClick={handleApply}
               className="min-h-[44px] px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-sm shadow-xs disabled:opacity-50"
             >
-              ✓ {isApplied ? 'प्रयुक्त' : hi.ai.buttonUse}
+              ✓ {isApplied ? hi.ai.applied : hi.ai.buttonUse}
             </button>
             <button
               type="button"

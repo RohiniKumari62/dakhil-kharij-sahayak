@@ -136,14 +136,14 @@ export function FinalOrderStep({ applicationId, initialData, isEditable }: Props
           return (
             <div className="space-y-3">
               <h4 className="text-xs font-bold text-indigo-950 uppercase tracking-wide">
-                प्रस्तावित अंतिम आदेश (ड्राफ्ट):
+                {hi.stepForms.finalOrder.draftOrderHeading}
               </h4>
               <div className="p-3 bg-white border border-indigo-200 rounded text-sm text-zinc-900 leading-relaxed font-sans whitespace-pre-wrap">
                 {data.orderTextHi}
               </div>
               {data.missingFacts && data.missingFacts.length > 0 && (
                 <div className="text-xs text-amber-900">
-                  <span className="font-bold">अभिलेख में अनुपलब्ध तथ्य: </span>
+                  <span className="font-bold">{hi.stepForms.finalOrder.missingFactsLabel} </span>
                   <span>{data.missingFacts.join(', ')}</span>
                 </div>
               )}

@@ -153,7 +153,7 @@ export function DecisionBar({
     <div className="bg-white p-4 sm:p-5 rounded-xl border-2 border-zinc-300 shadow-md space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="text-base font-bold text-zinc-900">
-          कार्रवाई एवं निर्णय:
+          {hi.caseDetail.decisionSectionTitle}
         </div>
 
         <div className="flex flex-wrap gap-3">

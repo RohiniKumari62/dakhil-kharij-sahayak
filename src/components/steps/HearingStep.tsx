@@ -94,7 +94,7 @@ export function HearingStep({ applicationId, initialData, isEditable }: Props) {
               {data.summaryHi && (
                 <div>
                   <h4 className="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">
-                    सारांश प्रारूप:
+                    {hi.stepForms.hearing.summaryDraftHeading}
                   </h4>
                   <div className="p-3 bg-white border border-indigo-200 rounded text-sm text-zinc-800 leading-relaxed font-sans">
                     {data.summaryHi}
@@ -138,7 +138,7 @@ export function HearingStep({ applicationId, initialData, isEditable }: Props) {
               {data.draftRecommendationHi && (
                 <div>
                   <h4 className="text-xs font-bold text-indigo-950 uppercase tracking-wide mb-1">
-                    प्रस्तावित अनुशंसा (वैकल्पिक समापन सहित):
+                    {hi.stepForms.hearing.recommendationDraftHeading}
                   </h4>
                   <div className="p-3 bg-white border border-indigo-200 rounded text-xs text-zinc-800 leading-relaxed font-sans whitespace-pre-wrap">
                     {data.draftRecommendationHi}

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { hi } from '@/lib/i18n/hi';
 import type { Role, Step } from '@/lib/workflow/types';
 import { runAiTask } from '@/lib/ai/service';
 import type { AiTaskKind, AnyAiOutput } from '@/lib/ai/schemas';
@@ -132,8 +133,8 @@ export async function resolveSuggestion(
 
     const auditNote =
       outcome === 'ACCEPTED'
-        ? 'AI सुझाव पूर्णतः स्वीकार किया गया'
-        : 'AI सुझाव में संशोधन कर उपयोग किया गया';
+        ? hi.audit.aiAcceptedNote
+        : hi.audit.aiEditedNote;
 
     await admin.from('audit_events').insert({
       application_id: suggestion.application_id,

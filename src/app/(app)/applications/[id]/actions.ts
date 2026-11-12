@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { hi } from '@/lib/i18n/hi';
 import {
   STEP_OWNER,
   type Role,
@@ -193,8 +194,8 @@ export async function saveStepData(
 
       const auditNote =
         outcome === 'ACCEPTED'
-          ? 'AI सुझाव पूर्णतः स्वीकार किया गया'
-          : 'AI सुझाव में संशोधन कर उपयोग किया गया';
+          ? hi.audit.aiAcceptedNote
+          : hi.audit.aiEditedNote;
 
       await adminClient.from('audit_events').insert({
         application_id: applicationId,

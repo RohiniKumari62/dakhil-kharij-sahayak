@@ -11,7 +11,7 @@ interface PageProps {
 }
 
 export const metadata = {
-  title: 'कार्य सूची | दाखिल-खारिज सहायक',
+  title: hi.dashboard.pageTitle,
 };
 
 export default async function DashboardPage({ searchParams }: PageProps) {
@@ -80,7 +80,7 @@ export default async function DashboardPage({ searchParams }: PageProps) {
       {/* Filter by Step */}
       <div className="bg-white p-3 sm:p-4 border border-zinc-200 rounded-xl shadow-xs">
         <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-          चरण अनुसार फ़िल्टर
+          {hi.dashboard.filterStepLabel}
         </div>
         <div className="flex flex-wrap gap-2">
           <Link

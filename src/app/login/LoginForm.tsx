@@ -14,17 +14,17 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
   {
     email: 'karamchari@demo.test',
     roleTitle: hi.roles.halka_karamchari,
-    name: 'राजेश कुमार',
+    name: hi.login.demoUsers.karamchari,
   },
   {
     email: 'ro@demo.test',
     roleTitle: hi.roles.revenue_officer,
-    name: 'सुनीता देवी',
+    name: hi.login.demoUsers.ro,
   },
   {
     email: 'co@demo.test',
     roleTitle: hi.roles.circle_officer,
-    name: 'अनिल प्रसाद',
+    name: hi.login.demoUsers.co,
   },
 ];
 

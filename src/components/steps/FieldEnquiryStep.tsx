@@ -146,7 +146,7 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
           disabled={!isEditable}
           value={roughNotes}
           onChange={(e) => setRoughNotes(e.target.value)}
-          placeholder="स्थल पर प्राप्त मौखिक साक्ष्य, उपस्थित लोगों के नाम एवं कच्ची टिप्पणी..."
+          placeholder={hi.stepForms.fieldEnquiry.roughNotesPlaceholder}
           className="w-full p-3 border border-zinc-300 rounded-lg text-base text-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:bg-zinc-100 disabled:text-zinc-500"
         />
       </div>
@@ -186,7 +186,7 @@ export function FieldEnquiryStep({ applicationId, initialData, isEditable }: Pro
               </div>
               {data.coSharersMentioned && data.coSharersMentioned.length > 0 && (
                 <div className="text-xs text-indigo-900">
-                  <span className="font-bold">उल्लिखित सह-हिस्सेदार: </span>
+                  <span className="font-bold">{hi.stepForms.fieldEnquiry.coSharersLabel} </span>
                   <span>{data.coSharersMentioned.join(', ')}</span>
                 </div>
               )}

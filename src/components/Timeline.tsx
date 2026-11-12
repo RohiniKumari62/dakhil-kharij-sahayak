@@ -33,7 +33,7 @@ export function Timeline({ events }: Props) {
   const getEventLabel = (eventType: string): string => {
     switch (eventType) {
       case 'CREATED':
-        return 'आवेदन दर्ज';
+        return hi.timeline.eventCreated;
       case 'FORWARDED':
         return hi.decisions.FORWARD;
       case 'RETURNED':
@@ -45,9 +45,9 @@ export function Timeline({ events }: Props) {
       case 'REJECTED':
         return hi.decisions.REJECT;
       case 'AI_SUGGESTION_USED':
-        return 'AI सुझाव प्रयुक्त';
+        return hi.timeline.eventAiUsed;
       case 'NOTE_SAVED':
-        return 'टिप्पणी सहेजी गई';
+        return hi.timeline.eventNoteSaved;
       default:
         return eventType;
     }

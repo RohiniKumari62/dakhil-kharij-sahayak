@@ -1,7 +1,8 @@
 import { LoginForm } from './LoginForm';
+import { hi } from '@/lib/i18n/hi';
 
 export const metadata = {
-  title: 'लॉगिन | दाखिल-खारिज सहायक',
+  title: hi.login.pageTitle,
 };
 
 export default function LoginPage() {
