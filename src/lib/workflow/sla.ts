@@ -129,3 +129,4 @@ export function registrationDelayDays(deedDate: string | Date, receivedOn: strin
 export function isBeyondLimit(days: number): boolean {
   return days > REGISTRATION_DELAY_LIMIT_DAYS;
 }
+

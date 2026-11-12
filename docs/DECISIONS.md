@@ -15,3 +15,4 @@
 | All Hindi text in one file | Easy to improve language in one place; another language can be added later. |
 | Deadline is a setting (SLA_DAYS) | Public sources disagree on the number of days. |
 | Synthetic data only | Protects privacy. Safe to share publicly. |
+| Demo reset RPC (truncate_demo_data) | Allows idempotent seed re-runs via service role without circumventing audit append-only triggers in normal operations (demo only). |

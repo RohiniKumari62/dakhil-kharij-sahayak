@@ -11,15 +11,16 @@
 4. Create tables: SQL Editor -> New query -> paste supabase/migrations/0001_schema.sql
    -> Run. Success message expected.
 5. New query again -> paste 0002_transition.sql -> Run.
-6. Table Editor: check profiles, applications, step_records, audit_events, ai_suggestions.
-7. Authentication -> Providers: Email must be enabled. For this demo turn OFF
+6. (Demo/Dev) New query -> paste 0003_demo_reset.sql -> Run (enables idempotent seeding via truncate_demo_data; remove in production).
+7. Table Editor: check profiles, applications, step_records, audit_events, ai_suggestions.
+8. Authentication -> Providers: Email must be enabled. For this demo turn OFF
    forced email confirmation.
-8. Put keys in .env.local (copy .env.example):
+9. Put keys in .env.local (copy .env.example):
    NEXT_PUBLIC_SUPABASE_URL=<Project URL>
    NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key>
    SUPABASE_SERVICE_ROLE_KEY=<service role key>
-9. Run: npm run seed   (creates 3 demo users and 15 fake cases)
-10. Before submitting: open the dashboard and make sure the project is active
+10. Run: npm run seed   (creates 3 demo users and 15 fake cases)
+11. Before submitting: open the dashboard and make sure the project is active
     (free projects can pause after a period of no use).
 
 Demo logins (password Demo@12345): karamchari@demo.test, ro@demo.test, co@demo.test

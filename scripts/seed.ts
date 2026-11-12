@@ -479,19 +479,19 @@ async function seed() {
 
   console.log('✓ Profiles verified for all 3 demo users.');
 
-  // 2. Wipe old demo applications
-  // Note: if custom RPC truncate_demo_data exists, call it; otherwise attempt delete
+  // 2. Wipe old demo applications via truncate_demo_data RPC
   const { error: rpcErr } = await adminClient.rpc('truncate_demo_data');
   if (rpcErr) {
-    // If no RPC, delete from applications (will succeed if no audit_events block it)
-    const { error: delErr } = await adminClient.from('applications').delete().neq('case_no', '');
-    if (delErr) {
-      console.warn('Note on wiping demo data:', delErr.message);
-      console.warn('If audit trigger blocks delete, please run `truncate applications cascade;` in Supabase SQL Editor.');
-    }
-  } else {
-    console.log('✓ Successfully wiped old demo applications via truncate_demo_data RPC.');
+    console.error(
+      '\n[ERROR] Failed to wipe demo data: could not execute RPC function public.truncate_demo_data().'
+    );
+    console.error(
+      'Please run supabase/migrations/0003_demo_reset.sql in your Supabase SQL Editor first.\nError details:',
+      rpcErr.message
+    );
+    process.exit(1);
   }
+  console.log('✓ Successfully wiped old demo applications via truncate_demo_data RPC.');
 
   // 3. Insert 15 synthetic applications
   console.log('Inserting 15 synthetic applications...');
@@ -749,3 +749,4 @@ seed().catch((err) => {
   console.error('Seed script error:', err);
   process.exit(1);
 });
+
