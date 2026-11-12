@@ -132,6 +132,13 @@ export const hi = {
     actorBy: 'द्वारा',
     timeAt: 'समय',
     formSaved: 'सहेजा गया',
+    saveButton: 'विवरण सहेजें',
+    saving: 'सहेज रहे हैं...',
+    backToDashboard: 'डैशबोर्ड पर वापस जाएँ',
+    currentStepHeading: 'वर्तमान चरण की कार्रवाई',
+    activeStepOwnerPrefix: 'यह चरण',
+    activeStepOwnerSuffix: 'के पास है।',
+    noteLabel: 'टिप्पणी',
   },
 
   stepForms: {
@@ -166,13 +173,41 @@ export const hi = {
       objectionDeadline: 'आपत्ति दर्ज करने की अंतिम तिथि',
       specificNoticeParties: 'खास सूचना (प्रपत्र-XII) पाने वाले पक्षकार',
       addParty: 'पक्षकार जोड़ें',
+      removeParty: 'हटाएँ',
       partyName: 'नाम',
       partyRelation: 'संबंध / भूमिका',
       objectionsTitle: 'प्राप्त आपत्तियाँ',
+      addObjection: 'आपत्ति जोड़ें',
+      removeObjection: 'हटाएँ',
       noObjections: 'इस वाद में कोई आपत्ति प्राप्त नहीं हुई है।',
       objectorName: 'आपत्तिकर्ता',
       objectionText: 'आपत्ति का विवरण',
       receivedOn: 'प्राप्ति तिथि',
+      formXiTitle: 'आम सूचना (प्रपत्र-XI) का प्रारूप',
+      formXiiTitle: 'खास सूचना (प्रपत्र-XII) का प्रारूप',
+      noSpecificParties: 'कोई खास पक्षकार दर्ज नहीं है।',
+      renderFormXi: (params: {
+        caseNo: string;
+        applicantName: string;
+        mauza: string;
+        khataNo: string;
+        khesraNo: string;
+        areaDecimal: number;
+        deadline: string;
+      }) =>
+        `बिहार भूमि दाखिल-खारिज नियमावली के अंतर्गत आम सूचना (प्रपत्र-XI):\n\nसर्वसाधारण को सूचित किया जाता है कि वाद संख्या ${params.caseNo} में आवेदक ${params.applicantName} द्वारा मौजा ${params.mauza}, खाता संख्या ${params.khataNo}, खेसरा संख्या ${params.khesraNo}, रकबा ${params.areaDecimal} डिसमिल के दाखिल-खारिज हेतु आवेदन प्रस्तुत किया गया है। यदि किसी व्यक्ति को इस नामान्तरण पर कोई आपत्ति हो, तो वे नियत तिथि ${params.deadline} तक अंचल कार्यालय में साक्ष्य सहित अपनी आपत्ति दर्ज करा सकते हैं। उक्त तिथि के उपरांत किसी आपत्ति पर विचार नहीं किया जाएगा।`,
+      renderFormXii: (params: {
+        partyName: string;
+        partyRelation: string;
+        caseNo: string;
+        applicantName: string;
+        mauza: string;
+        khataNo: string;
+        khesraNo: string;
+        areaDecimal: number;
+        deadline: string;
+      }) =>
+        `बिहार भूमि दाखिल-खारिज नियमावली के अंतर्गत खास सूचना (प्रपत्र-XII):\n\nप्रति, श्री/श्रीमती ${params.partyName} (संबंध: ${params.partyRelation})\n\nआपको सूचित किया जाता है कि वाद संख्या ${params.caseNo} (आवेदक: ${params.applicantName}) में मौजा ${params.mauza}, खाता संख्या ${params.khataNo}, खेसरा संख्या ${params.khesraNo}, रकबा ${params.areaDecimal} डिसमिल भूमि के नामान्तरण हेतु आवेदन प्राप्त हुआ है। हितबद्ध पक्षकार होने के नाते यदि आपको इस संबंध में कोई आपत्ति हो, तो कृपया दिनांक ${params.deadline} तक अपना लिखित उत्तर अथवा आपत्ति अंचल कार्यालय में प्रस्तुत करें।`,
     },
     hearing: {
       title: 'सुनवाई एवं राजस्व अधिकारी की अनुशंसा',
