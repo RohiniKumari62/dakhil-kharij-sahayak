@@ -69,6 +69,11 @@ async function runCheck() {
 
   console.log('\n--- Running Checks ---');
 
+  function getErrorMessage(err: unknown): string {
+    if (err instanceof Error) return err.message;
+    return String(err);
+  }
+
   // a) Connection works with the service role key
   try {
     const { error } = await adminClient.from('profiles').select('id', { count: 'exact', head: true });
@@ -85,8 +90,8 @@ async function runCheck() {
     } else {
       console.log('Check a) Service role connection: PASS');
     }
-  } catch (err: any) {
-    console.log(`Check a) Service role connection: FAIL - ${err?.message || err}`);
+  } catch (err: unknown) {
+    console.log(`Check a) Service role connection: FAIL - ${getErrorMessage(err)}`);
   }
 
   // b) Tables exist and can be read: profiles, applications, step_records, audit_events, ai_suggestions
@@ -99,8 +104,8 @@ async function runCheck() {
       if (error) {
         missingOrUnreadable.push(`${table} (${error.message})`);
       }
-    } catch (err: any) {
-      missingOrUnreadable.push(`${table} (${err?.message || err})`);
+    } catch (err: unknown) {
+      missingOrUnreadable.push(`${table} (${getErrorMessage(err)})`);
     }
   }
 
@@ -120,8 +125,8 @@ async function runCheck() {
     } else {
       console.log(`Check c) Anon reading applications rejected/no rows: FAIL (${data.length} rows exposed to anon)`);
     }
-  } catch (err: any) {
-    console.log(`Check c) Anon reading applications rejected/no rows: PASS (Threw error: ${err?.message || err})`);
+  } catch (err: unknown) {
+    console.log(`Check c) Anon reading applications rejected/no rows: PASS (Threw error: ${getErrorMessage(err)})`);
   }
 
   // d) Using the ANON key: an insert into applications is rejected
@@ -144,8 +149,8 @@ async function runCheck() {
     } else {
       console.log('Check d) Anon insert into applications rejected: FAIL (Insert unexpectedly succeeded)');
     }
-  } catch (err: any) {
-    console.log(`Check d) Anon insert into applications rejected: PASS (Exception: ${err?.message || err})`);
+  } catch (err: unknown) {
+    console.log(`Check d) Anon insert into applications rejected: PASS (Exception: ${getErrorMessage(err)})`);
   }
 
   // e) Using the ANON key: calling rpc apply_transition is rejected
@@ -165,8 +170,8 @@ async function runCheck() {
     } else {
       console.log('Check e) Anon rpc apply_transition rejected: FAIL (Rpc unexpectedly succeeded)');
     }
-  } catch (err: any) {
-    console.log(`Check e) Anon rpc apply_transition rejected: PASS (Exception: ${err?.message || err})`);
+  } catch (err: unknown) {
+    console.log(`Check e) Anon rpc apply_transition rejected: PASS (Exception: ${getErrorMessage(err)})`);
   }
 
   // f) Using the service role: calling rpc apply_transition with a random uuid fails with 'application not found'
@@ -189,11 +194,12 @@ async function runCheck() {
     } else {
       console.log('Check f) Service role rpc apply_transition fails with \'application not found\': FAIL (Call unexpectedly succeeded)');
     }
-  } catch (err: any) {
-    if (err?.message?.includes('application not found')) {
-      console.log(`Check f) Service role rpc apply_transition fails with 'application not found': PASS (${err.message})`);
+  } catch (err: unknown) {
+    const msg = getErrorMessage(err);
+    if (msg.includes('application not found')) {
+      console.log(`Check f) Service role rpc apply_transition fails with 'application not found': PASS (${msg})`);
     } else {
-      console.log(`Check f) Service role rpc apply_transition fails with 'application not found': FAIL (Exception: ${err?.message || err})`);
+      console.log(`Check f) Service role rpc apply_transition fails with 'application not found': FAIL (Exception: ${msg})`);
     }
   }
 
@@ -219,8 +225,8 @@ async function runCheck() {
         `Check g) Counts: ${pass ? 'PASS' : 'FAIL'} (profiles: ${pCount} [expected 3], applications: ${aCount} [expected 15])`
       );
     }
-  } catch (err: any) {
-    console.log(`Check g) Counts: FAIL - ${err?.message || err}`);
+  } catch (err: unknown) {
+    console.log(`Check g) Counts: FAIL - ${getErrorMessage(err)}`);
   }
 }
 
