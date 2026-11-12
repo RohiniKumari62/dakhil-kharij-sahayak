@@ -69,6 +69,27 @@ export const hi = {
     VALIDATION_FAILED: 'कृपया इस चरण के सभी आवश्यक विवरण भरें।',
   },
 
+  stepValidationErrors: {
+    MISSING_DOCUMENTS_COMPLETE: 'दस्तावेज पूर्णता की स्थिति चुनना आवश्यक है।',
+    MISSING_VISIT_DATE: 'स्थल निरीक्षण की तिथि दर्ज करना आवश्यक है।',
+    MISSING_POSSESSION_STATUS: 'दखल-कब्जा की स्थिति चुनना आवश्यक है।',
+    MISSING_REPORT_TEXT: 'स्थल जांच प्रतिवेदन दर्ज करना आवश्यक है।',
+    MISSING_GENERAL_NOTICE_DATE: 'आम सूचना की तिथि दर्ज करना आवश्यक है।',
+    MISSING_OBJECTION_DEADLINE: 'आपत्ति की अंतिम तिथि दर्ज करना आवश्यक है।',
+    MISSING_RECOMMENDATION_TEXT: 'अनुशंसा दर्ज करना आवश्यक है।',
+    MISSING_ORDER_TEXT: 'अंतिम आदेश का विवरण दर्ज करना आवश्यक है।',
+  },
+
+  dialog: {
+    confirmTitle: 'निर्णय की पुष्टि करें',
+    cancel: 'रद्द करें',
+    confirm: 'पुष्टि करें',
+    processing: 'प्रक्रिया जारी है...',
+    noteLabel: 'टिप्पणी (कम से कम 10 अक्षर):',
+    noteRequiredError: 'कम से कम 10 अक्षरों की टिप्पणी आवश्यक है।',
+    forwardSuccess: 'आवेदन अगले चरण पर सफलतापूर्वक भेज दिया गया है।',
+  },
+
   login: {
     title: 'विभागीय लॉगिन',
     subtitle: 'बिहार राजस्व एवं भूमि सुधार विभाग',

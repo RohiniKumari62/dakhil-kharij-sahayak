@@ -12,6 +12,7 @@ import { FieldEnquiryStep } from '@/components/steps/FieldEnquiryStep';
 import { NoticeStep } from '@/components/steps/NoticeStep';
 import { HearingStep } from '@/components/steps/HearingStep';
 import { FinalOrderStep } from '@/components/steps/FinalOrderStep';
+import { DecisionBar } from '@/components/DecisionBar';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -250,6 +251,18 @@ export default async function ApplicationDetailPage({ params }: Props) {
         ) : null}
 
         {renderStepForm(currentStep, isEditable)}
+
+        {/* Decision Bar for permitted role decisions */}
+        {userRole && (
+          <div className="pt-4 border-t border-zinc-200">
+            <DecisionBar
+              applicationId={id}
+              currentStep={application.current_step}
+              status={application.status}
+              userRole={userRole}
+            />
+          </div>
+        )}
       </section>
 
       {/* 4. Earlier Steps as Read-Only Accordions */}
